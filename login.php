@@ -1,3 +1,27 @@
+
+
+<?php
+session_start();
+
+$error = ""; // Khai báo biến lưu thông báo lỗi
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Thực hiện kiểm tra thông tin đăng nhập tài khoản của admin
+    if ($username === "hienthamchi" && $password === "123456") {
+        // Đăng nhập thành công, lưu thông tin vào session và chuyển hướng
+        $_SESSION['username'] = $username;
+        header("Location: admin/index.php"); // Đường dẫn đến trang admin
+        exit();
+    } else {
+        // Đăng nhập không thành công, lưu thông báo lỗi vào biến $error
+        $error = "Đăng nhập không thành công. Vui lòng thử lại.";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,26 +75,29 @@
                             <span><i class="fab fa-twitter-square"></i></span>
                         </div>
                     </div>
+
                     <div class="card-body">
-                        <form>
+                        <form method="post">
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="txtUser"><i class="fas fa-user"></i></span>
-                                <input type="text" class="form-control" placeholder="username" >
+                                <input type="text" class="form-control" placeholder="username" name="username">
                             </div>
 
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="txtPass"><i class="fas fa-key"></i></span>
-                                <input type="text" class="form-control" placeholder="password" >
+                                <input type="password" class="form-control" placeholder="password" name="password">
                             </div>
                             
                             <div class="row align-items-center remember">
                                 <input type="checkbox">Remember Me
                             </div>
                             <div class="form-group">
-                                <input type="submit" value="Login" class="btn float-end login_btn">
+                                <input type="submit" value="Login" class="btn float-end login_btn" name="login">
                             </div>
                         </form>
+
                     </div>
+
                     <div class="card-footer">
                         <div class="d-flex justify-content-center ">
                             Don't have an account?<a href="#" class="text-warning text-decoration-none">Sign Up</a>
@@ -82,6 +109,16 @@
                 </div>
 
         </div>
+
+        <script>
+        // JavaScript để hiển thị cửa sổ thông báo nếu có lỗi không đăng nhập được
+            <?php if (!empty($error)): ?>
+                window.onload = function() {
+                    alert("<?php echo $error; ?>");
+                }
+            <?php endif; ?>
+        </script>
+
     </main>
     <footer class="bg-white d-flex justify-content-center align-items-center border-top border-secondary  border-2" style="height:80px">
         <h4 class="text-center text-uppercase fw-bold">TLU's music garden</h4>
